@@ -6,7 +6,7 @@ function Navigation() {
     <nav className="bg-gradient-to-r from-blue-600 to-blue-800 shadow-md py-3 px-4 md:px-6">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center mb-4 md:mb-0">
-          <img src="/logo192.png" alt="ClimaSync Logo" className="w-10 h-10 mr-3" />
+          <img src="./ClimaSync2.png" alt="ClimaSync Logo" className="w-10 h-10 mr-3" />
           <h1 className="text-white text-xl font-bold">ClimaSync</h1>
         </div>
         <ul className="flex flex-wrap justify-center space-x-1 md:space-x-4">

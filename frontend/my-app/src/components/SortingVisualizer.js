@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './SortingVisualizer.css';
-import { mergeSort, quickSort } from '../utils/sortingAlgorithms';
 
 function SortingVisualizer() {
   const [array, setArray] = useState([]);
@@ -199,40 +197,31 @@ function SortingVisualizer() {
     generateRandomData(size);
   };
 
-  const getMetricLabel = (metric) => {
-    switch(metric) {
-      case 'temperature': return 'Temperature (°C)';
-      case 'humidity': return 'Humidity (%)';
-      case 'rainfall': return 'Rainfall (mm)';
-      default: return metric;
-    }
-  };
-
   return (
-    <div className="sorting-visualizer">
-      <h2>Sorting Algorithm Visualizer</h2>
+    <div className="max-w-4xl mx-auto p-4">
+      <h2 className="text-2xl font-bold text-center mb-4">Sorting Algorithm Visualizer</h2>
       
-      <div className="controls">
-        <div className="control-group">
-          <label htmlFor="algorithm">Algorithm:</label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label className="block mb-1">Algorithm:</label>
           <select 
-            id="algorithm" 
             value={sortingAlgorithm} 
             onChange={handleAlgorithmChange}
             disabled={isSorting}
+            className="w-full p-2 border rounded"
           >
             <option value="mergeSort">Merge Sort</option>
             <option value="quickSort">Quick Sort</option>
           </select>
         </div>
         
-        <div className="control-group">
-          <label htmlFor="sortBy">Sort By:</label>
+        <div>
+          <label className="block mb-1">Sort By:</label>
           <select 
-            id="sortBy" 
             value={sortBy} 
             onChange={handleSortByChange}
             disabled={isSorting}
+            className="w-full p-2 border rounded"
           >
             <option value="temperature">Temperature</option>
             <option value="humidity">Humidity</option>
@@ -240,26 +229,26 @@ function SortingVisualizer() {
           </select>
         </div>
         
-        <div className="control-group">
-          <label htmlFor="speed">Speed:</label>
+        <div>
+          <label className="block mb-1">Speed:</label>
           <input 
             type="range" 
-            id="speed" 
             min="1" 
             max="90" 
             value={sortingSpeed} 
             onChange={handleSpeedChange}
             disabled={isSorting}
+            className="w-full"
           />
         </div>
         
-        <div className="control-group">
-          <label htmlFor="size">Data Size:</label>
+        <div>
+          <label className="block mb-1">Data Size:</label>
           <select 
-            id="size" 
             onChange={handleSizeChange}
             disabled={isSorting}
             value={array.length}
+            className="w-full p-2 border rounded"
           >
             <option value="5">5 items</option>
             <option value="10">10 items</option>
@@ -269,52 +258,68 @@ function SortingVisualizer() {
         </div>
       </div>
       
-      <div className="button-group">
+      <div className="flex justify-center space-x-4 mb-6">
         <button 
           onClick={startSorting}
-          disabled={isSorting || sortingSteps.length > 0 && currentStep === sortingSteps.length - 1}
+          disabled={isSorting || (sortingSteps.length > 0 && currentStep === sortingSteps.length - 1)}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-blue-300"
         >
           {sortingSteps.length > 0 && currentStep === sortingSteps.length - 1 ? 'Sorted' : 'Start Sorting'}
         </button>
-        <button onClick={resetSorting} disabled={isSorting}>
+        <button 
+          onClick={resetSorting} 
+          disabled={isSorting}
+          className="px-4 py-2 bg-gray-500 text-white rounded disabled:bg-gray-300"
+        >
           Reset
         </button>
       </div>
       
       {performanceResults && (
-        <div className="performance-metrics">
-          <h3>Algorithm Performance</h3>
-          <p>Algorithm: {performanceResults.algorithm === 'mergeSort' ? 'Merge Sort' : 'Quick Sort'}</p>
-          <p>Execution Time: {performanceResults.duration.toFixed(3)} ms</p>
-          <p>Steps: {performanceResults.steps}</p>
-          <p>Data Size: {array.length} records</p>
+        <div className="mb-6 p-4 bg-gray-100 rounded">
+          <h3 className="font-bold mb-2">Algorithm Performance</h3>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div>Algorithm: {performanceResults.algorithm === 'mergeSort' ? 'Merge Sort' : 'Quick Sort'}</div>
+            <div>Execution Time: {performanceResults.duration.toFixed(3)} ms</div>
+            <div>Steps: {performanceResults.steps}</div>
+            <div>Data Size: {array.length} records</div>
+          </div>
         </div>
       )}
       
-      <div className="array-container">
-        {array.map((item, index) => (
-          <div 
-            key={item.id} 
-            className="array-bar"
-            style={{
-              height: `${item[sortBy] * 4}px`,
-              backgroundColor: `hsl(${
-                sortBy === 'temperature' ? '0, 80%, 50%' : 
-                sortBy === 'humidity' ? '200, 80%, 50%' : '170, 80%, 50%'
-              })`,
-            }}
-          >
-            <div className="bar-label">{item[sortBy]}</div>
-          </div>
-        ))}
+      <div className="h-64 flex items-end justify-center bg-gray-50 border p-4 mb-6">
+        {array.map((item) => {
+          let barColor;
+          switch(sortBy) {
+            case 'temperature': barColor = 'bg-red-500'; break;
+            case 'humidity': barColor = 'bg-blue-500'; break;
+            case 'rainfall': barColor = 'bg-green-500'; break;
+            default: barColor = 'bg-purple-500';
+          }
+          
+          return (
+            <div 
+              key={item.id} 
+              className="mx-1 flex flex-col items-center"
+            >
+              <div className="text-xs mb-1">{item[sortBy]}</div>
+              <div 
+                className={`w-8 ${barColor}`}
+                style={{height: `${item[sortBy] * 3}px`}}
+              ></div>
+            </div>
+          );
+        })}
       </div>
       
-      <div className="algorithm-info">
-        <h3>{sortingAlgorithm === 'mergeSort' ? 'Merge Sort' : 'Quick Sort'} Explanation</h3>
+      <div className="bg-gray-50 p-4 border rounded">
+        <h3 className="font-bold mb-2">
+          {sortingAlgorithm === 'mergeSort' ? 'Merge Sort' : 'Quick Sort'} Explanation
+        </h3>
         {sortingAlgorithm === 'mergeSort' ? (
-          <div className="algorithm-description">
-            <p><strong>Merge Sort</strong> is a divide-and-conquer algorithm with O(n log n) complexity. It:</p>
-            <ol>
+          <div>
+            <p className="mb-2"><strong>Merge Sort</strong> is a divide-and-conquer algorithm with O(n log n) complexity.</p>
+            <ol className="list-decimal ml-5 mb-2">
               <li>Divides the array into halves until reaching single elements</li>
               <li>Merges these small sorted arrays into larger ones</li>
               <li>Continues until the entire array is sorted</li>
@@ -322,9 +327,9 @@ function SortingVisualizer() {
             <p>Merge Sort is efficient for large datasets and has consistent performance across cases.</p>
           </div>
         ) : (
-          <div className="algorithm-description">
-            <p><strong>Quick Sort</strong> is a divide-and-conquer algorithm with average O(n log n) complexity. It:</p>
-            <ol>
+          <div>
+            <p className="mb-2"><strong>Quick Sort</strong> is a divide-and-conquer algorithm with average O(n log n) complexity.</p>
+            <ol className="list-decimal ml-5 mb-2">
               <li>Selects a pivot element</li>
               <li>Partitions the array so elements less than pivot are on the left</li>
               <li>Recursively applies the same process to the sub-arrays</li>

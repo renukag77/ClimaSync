@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './DataTable.css';
-import { mergeSort, quickSort, measureSortingPerformance } from '../utils/sortingAlgorithms';
 
 function DataTable() {
   const [weatherData, setWeatherData] = useState([]);
@@ -33,7 +31,7 @@ function DataTable() {
         ];
         
         setWeatherData(data);
-        sortData(data, sortBy, algorithm);
+        setSortedData(data); // Assuming you'll sort this with your backend logic
         setLoading(false);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -44,27 +42,17 @@ function DataTable() {
     fetchData();
   }, []);
 
-  const sortData = (data, key, sortAlgorithm) => {
-    const sortFunc = sortAlgorithm === 'mergeSort' ? mergeSort : quickSort;
-    const result = measureSortingPerformance(sortFunc, [...data], key);
-    
-    setSortedData(result.sortedData);
-    setPerformance({
-      algorithm: sortAlgorithm,
-      duration: result.duration,
-      dataSize: data.length
-    });
-  };
-
   const handleSort = (key) => {
     setSortBy(key);
-    sortData(weatherData, key, algorithm);
+    // Call your backend sorting function here
+    // sortData(weatherData, key, algorithm);
   };
 
   const handleAlgorithmChange = (e) => {
     const selectedAlgorithm = e.target.value;
     setAlgorithm(selectedAlgorithm);
-    sortData(weatherData, sortBy, selectedAlgorithm);
+    // Call your backend sorting function here
+    // sortData(weatherData, sortBy, selectedAlgorithm);
   };
 
   const handleFileUpload = (e) => {
@@ -74,9 +62,10 @@ function DataTable() {
       reader.onload = (event) => {
         try {
           const csvData = event.target.result;
-          const parsedData = parseCSV(csvData);
-          setWeatherData(parsedData);
-          sortData(parsedData, sortBy, algorithm);
+          // Call your CSV parsing function here
+          // const parsedData = parseCSV(csvData);
+          // setWeatherData(parsedData);
+          // sortData(parsedData, sortBy, algorithm);
         } catch (error) {
           console.error('Error parsing CSV:', error);
         }
@@ -85,86 +74,109 @@ function DataTable() {
     }
   };
 
-  const parseCSV = (csvText) => {
-    const lines = csvText.split('\n');
-    const headers = lines[0].split(',');
-    
-    return lines.slice(1).filter(line => line.trim() !== '').map((line, index) => {
-      const values = line.split(',');
-      const entry = { id: index + 1 };
-      
-      headers.forEach((header, i) => {
-        const value = values[i]?.trim();
-        if (header === 'date') {
-          entry[header] = value;
-        } else {
-          entry[header] = parseFloat(value);
-        }
-      });
-      
-      return entry;
-    });
-  };
-
-  if (loading) return <div className="loading">Loading weather data...</div>;
+  if (loading) return <div className="flex items-center justify-center h-40 text-gray-600">Loading weather data...</div>;
 
   return (
-    <div className="data-table-container">
-      <h2>Weather Data Analysis</h2>
+    <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6 my-8">
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Weather Data Analysis</h2>
       
-      <div className="controls">
-        <div className="algorithm-selector">
-          <label htmlFor="algorithm">Sorting Algorithm:</label>
-          <select id="algorithm" value={algorithm} onChange={handleAlgorithmChange}>
+      <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
+        <div className="w-full md:w-1/2">
+          <label htmlFor="algorithm" className="block text-sm font-medium text-gray-700 mb-1">Sorting Algorithm:</label>
+          <select 
+            id="algorithm" 
+            value={algorithm} 
+            onChange={handleAlgorithmChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
             <option value="mergeSort">Merge Sort</option>
             <option value="quickSort">Quick Sort</option>
           </select>
         </div>
         
-        <div className="data-upload">
-          <label htmlFor="file-upload">Upload Weather Data CSV:</label>
-          <input type="file" id="file-upload" accept=".csv" onChange={handleFileUpload} />
+        <div className="w-full md:w-1/2">
+          <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-1">Upload Weather Data CSV:</label>
+          <input 
+            type="file" 
+            id="file-upload" 
+            accept=".csv" 
+            onChange={handleFileUpload} 
+            className="w-full px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
         </div>
       </div>
       
       {performance && (
-        <div className="performance-metrics">
-          <h3>Sorting Performance</h3>
-          <p>Algorithm: {performance.algorithm === 'mergeSort' ? 'Merge Sort' : 'Quick Sort'}</p>
-          <p>Execution Time: {performance.duration.toFixed(3)} ms</p>
-          <p>Data Size: {performance.dataSize} records</p>
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+          <h3 className="text-lg font-semibold text-blue-800 mb-2">Sorting Performance</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-white p-3 rounded shadow">
+              <p className="text-xs text-gray-500">Algorithm</p>
+              <p className="font-medium">{performance.algorithm === 'mergeSort' ? 'Merge Sort' : 'Quick Sort'}</p>
+            </div>
+            <div className="bg-white p-3 rounded shadow">
+              <p className="text-xs text-gray-500">Execution Time</p>
+              <p className="font-medium">{performance.duration?.toFixed(3)} ms</p>
+            </div>
+            <div className="bg-white p-3 rounded shadow">
+              <p className="text-xs text-gray-500">Data Size</p>
+              <p className="font-medium">{performance.dataSize} records</p>
+            </div>
+          </div>
         </div>
       )}
       
-      <div className="table-container">
-        <table className="weather-table">
-          <thead>
+      <div className="overflow-x-auto">
+        <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <thead className="bg-gray-100">
             <tr>
-              <th>ID</th>
-              <th onClick={() => handleSort('date')} className={sortBy === 'date' ? 'active-sort' : ''}>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">ID</th>
+              <th 
+                onClick={() => handleSort('date')} 
+                className={`px-4 py-3 text-left text-sm font-medium text-gray-600 cursor-pointer hover:bg-gray-200 ${sortBy === 'date' ? 'bg-gray-200' : ''}`}
+              >
                 Date {sortBy === 'date' && '↓'}
               </th>
-              <th onClick={() => handleSort('temperature')} className={sortBy === 'temperature' ? 'active-sort' : ''}>
+              <th 
+                onClick={() => handleSort('temperature')} 
+                className={`px-4 py-3 text-left text-sm font-medium text-gray-600 cursor-pointer hover:bg-gray-200 ${sortBy === 'temperature' ? 'bg-gray-200' : ''}`}
+              >
                 Temperature (°C) {sortBy === 'temperature' && '↓'}
               </th>
-              <th onClick={() => handleSort('humidity')} className={sortBy === 'humidity' ? 'active-sort' : ''}>
+              <th 
+                onClick={() => handleSort('humidity')} 
+                className={`px-4 py-3 text-left text-sm font-medium text-gray-600 cursor-pointer hover:bg-gray-200 ${sortBy === 'humidity' ? 'bg-gray-200' : ''}`}
+              >
                 Humidity (%) {sortBy === 'humidity' && '↓'}
               </th>
-              <th onClick={() => handleSort('rainfall')} className={sortBy === 'rainfall' ? 'active-sort' : ''}>
+              <th 
+                onClick={() => handleSort('rainfall')} 
+                className={`px-4 py-3 text-left text-sm font-medium text-gray-600 cursor-pointer hover:bg-gray-200 ${sortBy === 'rainfall' ? 'bg-gray-200' : ''}`}
+              >
                 Rainfall (mm) {sortBy === 'rainfall' && '↓'}
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200">
             {sortedData.map((row) => (
-              <tr key={row.id}>
-                <td>{row.id}</td>
-                <td>{row.date}</td>
-                <td className={row.temperature > 15 ? 'high-temp' : row.temperature < 7 ? 'low-temp' : ''}>
+              <tr key={row.id} className="hover:bg-gray-50">
+                <td className="px-4 py-3 text-sm text-gray-500">{row.id}</td>
+                <td className="px-4 py-3 text-sm text-gray-900">{row.date}</td>
+                <td className={`px-4 py-3 text-sm ${
+                  row.temperature > 15 ? 'text-red-600 font-medium' : 
+                  row.temperature < 7 ? 'text-blue-600 font-medium' : 'text-gray-900'
+                }`}>
                   {row.temperature}
                 </td>
-                <td className={row.humidity > 65 ? 'high-humidity' : ''}>{row.humidity}</td>
-                <td className={row.rainfall > 40 ? 'heavy-rain' : row.rainfall < 20 ? 'light-rain' : ''}>
+                <td className={`px-4 py-3 text-sm ${
+                  row.humidity > 65 ? 'text-indigo-600 font-medium' : 'text-gray-900'
+                }`}>
+                  {row.humidity}
+                </td>
+                <td className={`px-4 py-3 text-sm ${
+                  row.rainfall > 40 ? 'text-purple-600 font-medium' : 
+                  row.rainfall < 20 ? 'text-green-600 font-medium' : 'text-gray-900'
+                }`}>
                   {row.rainfall}
                 </td>
               </tr>

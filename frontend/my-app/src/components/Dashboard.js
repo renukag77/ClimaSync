@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './Dashboard.css';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -38,8 +37,8 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  if (loading) return <div className="loading">Loading weather data...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+  if (loading) return <div className="flex items-center justify-center h-screen text-lg font-medium text-gray-600">Loading weather data...</div>;
+  if (error) return <div className="flex items-center justify-center h-screen text-lg font-medium text-red-600">{error}</div>;
 
   const temperatureData = {
     labels: weatherData.labels,
@@ -91,37 +90,42 @@ function Dashboard() {
   };
 
   return (
-    <div className="dashboard">
-      <h2>Weather Data Dashboard</h2>
-      <div className="stats-container">
-        <div className="stat-card">
-          <h3>Average Temperature</h3>
-          <p className="stat-value">
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Weather Data Dashboard</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-6 transition-all hover:shadow-lg">
+          <h3 className="text-lg font-medium text-gray-600 mb-2">Average Temperature</h3>
+          <p className="text-3xl font-bold text-pink-500">
             {(weatherData.temperatures.reduce((a, b) => a + b, 0) / weatherData.temperatures.length).toFixed(1)}°C
           </p>
         </div>
-        <div className="stat-card">
-          <h3>Average Humidity</h3>
-          <p className="stat-value">
+        
+        <div className="bg-white rounded-lg shadow-md p-6 transition-all hover:shadow-lg">
+          <h3 className="text-lg font-medium text-gray-600 mb-2">Average Humidity</h3>
+          <p className="text-3xl font-bold text-blue-500">
             {(weatherData.humidity.reduce((a, b) => a + b, 0) / weatherData.humidity.length).toFixed(1)}%
           </p>
         </div>
-        <div className="stat-card">
-          <h3>Total Rainfall</h3>
-          <p className="stat-value">
+        
+        <div className="bg-white rounded-lg shadow-md p-6 transition-all hover:shadow-lg">
+          <h3 className="text-lg font-medium text-gray-600 mb-2">Total Rainfall</h3>
+          <p className="text-3xl font-bold text-teal-500">
             {weatherData.rainfall.reduce((a, b) => a + b, 0)}mm
           </p>
         </div>
       </div>
       
-      <div className="charts-container">
-        <div className="chart">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg shadow-md p-4 overflow-hidden">
           <Line options={chartOptions} data={temperatureData} />
         </div>
-        <div className="chart">
+        
+        <div className="bg-white rounded-lg shadow-md p-4 overflow-hidden">
           <Line options={chartOptions} data={humidityData} />
         </div>
-        <div className="chart">
+        
+        <div className="bg-white rounded-lg shadow-md p-4 overflow-hidden">
           <Line options={chartOptions} data={rainfallData} />
         </div>
       </div>

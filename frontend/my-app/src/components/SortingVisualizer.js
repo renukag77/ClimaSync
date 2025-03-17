@@ -12,8 +12,10 @@ const SortingVisualizer = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [animationSpeed, setAnimationSpeed] = useState(1000);
   const [isRunning, setIsRunning] = useState(false);
-  const [magnificationFactor, setMagnificationFactor] = useState(15);
+  const [magnificationFactor, setMagnificationFactor] = useState(30); // Increased default value
   const [colorScheme, setColorScheme] = useState("gradient");
+  const [scaleFactor, setScaleFactor] = useState(0.005); // Decreased default for better scaling
+  const [barWidth, setBarWidth] = useState(60); // New state for bar width
 
   const handleSubmit = async () => {
     const url = `http://127.0.0.1:8000/filter?city=${city}&parameter=${parameter}&algo=${algo}&top_n=${topN}&order=${order}`;
@@ -165,31 +167,31 @@ const SortingVisualizer = () => {
 
   const { min, max, baseHeight } = getVisualizationStats();
 
-  // Color schemes for bars
+  // Enhanced color schemes for bars
   const colorSchemes = {
     gradient: (index, value, min, max) => {
       // Calculate relative position (0-1) of value between min and max
       const ratio = (value - min) / (max - min);
       const hue = 240 - ratio * 240; // Blue (240) to Red (0)
-      return `hsl(${hue}, 80%, 60%)`;
+      return `hsl(${hue}, 100%, 50%)`; // Increased saturation and lightness
     },
     rainbow: (index, value, min, max) => {
       // Create rainbow pattern based on index
       const hue = (index * 30) % 360;
-      return `hsl(${hue}, 80%, 60%)`;
+      return `hsl(${hue}, 100%, 50%)`; // Increased saturation
     },
     categorical: (index, value, min, max) => {
-      // Use distinct categorical colors
+      // Use distinct bright categorical colors
       const colors = [
-        "#FF5733", "#33FF57", "#3357FF", "#FF33F5", 
-        "#33FFF5", "#F5FF33", "#FF5733", "#C733FF",
-        "#33C7FF", "#FFC733", "#33FF8D", "#FF338D"
+        "#FF3333", "#33FF33", "#3333FF", "#FF33FF", 
+        "#33FFFF", "#FFFF33", "#FF8833", "#8833FF",
+        "#33FF88", "#FF3388", "#88FF33", "#3388FF"
       ];
       return colors[index % colors.length];
     }
   };
 
-  // Patterns for bars
+  // Patterns for bars with more pronounced differences
   const patterns = [
     { pattern: "solid" },
     { pattern: "striped" },
@@ -198,38 +200,39 @@ const SortingVisualizer = () => {
     { pattern: "gradient" }
   ];
 
-  // Create a unique style for each bar
+  // Create a unique style for each bar with more pronounced differences
   const getBarStyle = (index, value) => {
     const baseColor = colorSchemes[colorScheme](index, value, min, max);
     const patternType = patterns[index % patterns.length].pattern;
     
     let background = baseColor;
-    const lighterColor = `hsl(${parseInt(baseColor.replace('hsl(', '').split(',')[0])}, 80%, 75%)`;
+    const lighterColor = `hsl(${parseInt(baseColor.replace('hsl(', '').split(',')[0])}, 100%, 75%)`;
     
     if (patternType === "striped") {
-      background = `repeating-linear-gradient(45deg, ${baseColor}, ${baseColor} 8px, ${lighterColor} 8px, ${lighterColor} 16px)`;
+      background = `repeating-linear-gradient(45deg, ${baseColor}, ${baseColor} 10px, ${lighterColor} 10px, ${lighterColor} 20px)`;
     } else if (patternType === "dotted") {
-      background = `radial-gradient(circle, ${lighterColor} 2px, ${baseColor} 2px)`;
-      background += ` 0 0/8px 8px`;
+      background = `radial-gradient(circle, ${lighterColor} 3px, ${baseColor} 3px)`;
+      background += ` 0 0/10px 10px`;
     } else if (patternType === "dashed") {
-      background = `repeating-linear-gradient(90deg, ${baseColor}, ${baseColor} 12px, ${lighterColor} 12px, ${lighterColor} 18px)`;
+      background = `repeating-linear-gradient(90deg, ${baseColor}, ${baseColor} 15px, ${lighterColor} 15px, ${lighterColor} 25px)`;
     } else if (patternType === "gradient") {
       background = `linear-gradient(to top, ${baseColor}, ${lighterColor})`;
     }
     
     return {
       background,
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      borderRadius: "4px 4px 0 0"
+      boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)", // Enhanced shadow
+      borderRadius: "6px 6px 0 0", // Rounded top corners
+      border: "2px solid rgba(0,0,0,0.2)" // Added border
     };
   };
 
   return (
-    <div className="p-6 font-sans bg-gray-50">
-      <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Sorting Algorithm Visualizer</h2>
+    <div className="p-6 font-sans bg-gray-100">
+      <h2 className="text-4xl font-bold mb-8 text-center text-blue-800">Sorting Algorithm Visualizer</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-lg">
           <p className="mb-2 font-medium">Algorithm:</p>
           <select 
             value={algo} 
@@ -241,7 +244,7 @@ const SortingVisualizer = () => {
           </select>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow-lg">
           <p className="mb-2 font-medium">Sort By:</p>
           <select 
             value={parameter} 
@@ -254,7 +257,7 @@ const SortingVisualizer = () => {
           </select>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow-lg">
           <p className="mb-2 font-medium">Color Scheme:</p>
           <select 
             value={colorScheme} 
@@ -267,7 +270,7 @@ const SortingVisualizer = () => {
           </select>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow-lg">
           <p className="mb-2 font-medium">Speed: <span className="text-gray-500 text-sm">{Math.round(100 / (animationSpeed / 1000))}x</span></p>
           <input
             type="range"
@@ -280,7 +283,7 @@ const SortingVisualizer = () => {
           />
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow-lg">
           <p className="mb-2 font-medium">Data Size:</p>
           <select 
             value={topN} 
@@ -294,23 +297,51 @@ const SortingVisualizer = () => {
           </select>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow-lg">
           <p className="mb-2 font-medium">Magnification: <span className="text-gray-500 text-sm">{magnificationFactor}x</span></p>
           <input
             type="range"
-            min="1"
-            max="30"
+            min="10"
+            max="100"
             value={magnificationFactor}
             onChange={(e) => setMagnificationFactor(parseInt(e.target.value))}
             className="w-full"
           />
         </div>
+
+        {/* Scale factor with adjusted range */}
+        <div className="bg-white p-4 rounded-lg shadow-lg">
+          <p className="mb-2 font-medium">Scale Factor: <span className="text-gray-500 text-sm">{scaleFactor}</span></p>
+          <input
+            type="range"
+            min="0.001"
+            max="0.01"
+            step="0.0001"
+            value={scaleFactor}
+            onChange={(e) => setScaleFactor(parseFloat(e.target.value))}
+            className="w-full"
+          />
+        </div>
+
+        {/* New control for bar width */}
+        <div className="bg-white p-4 rounded-lg shadow-lg">
+          <p className="mb-2 font-medium">Bar Width: <span className="text-gray-500 text-sm">{barWidth}px</span></p>
+          <input
+            type="range"
+            min="30"
+            max="100"
+            step="5"
+            value={barWidth}
+            onChange={(e) => setBarWidth(parseInt(e.target.value))}
+            className="w-full"
+          />
+        </div>
       </div>
       
-      <div className="flex flex-wrap gap-4 mb-6 justify-center">
+      <div className="flex flex-wrap gap-4 mb-8 justify-center">
         <button 
           onClick={handleSubmit}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md transition-all"
+          className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-lg transition-all text-lg font-bold"
         >
           Fetch Data
         </button>
@@ -318,7 +349,7 @@ const SortingVisualizer = () => {
         <button 
           onClick={startSorting}
           disabled={isRunning || originalData.length === 0}
-          className={`px-6 py-3 text-white rounded-lg shadow-md transition-all ${
+          className={`px-8 py-4 text-white rounded-lg shadow-lg transition-all text-lg font-bold ${
             isRunning || originalData.length === 0 ? 'bg-blue-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
           }`}
         >
@@ -327,117 +358,162 @@ const SortingVisualizer = () => {
         
         <button 
           onClick={resetVisualization}
-          className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 shadow-md transition-all"
+          className="px-8 py-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700 shadow-lg transition-all text-lg font-bold"
         >
           Reset
         </button>
       </div>
       
-      <div className="border rounded-xl p-6 mb-6 bg-white shadow-lg h-96">
+      {/* Increased height for the visualization area */}
+      <div className="border rounded-xl p-6 mb-6 bg-white shadow-lg h-128">
         {steps.length > 0 && (
           <div className="flex items-end justify-center gap-3 h-full">
             {steps[currentStep].map((val, i) => {
-              // Exaggerate differences by magnifying only the part above baseHeight
-              const baseHeightPercent = 15; // Fixed base height percentage
-              const differenceHeight = magnificationFactor * (val - min);
+              // Modified height calculation with increased base height and magnification
+              const baseHeightPercent = 20; // Increased base height percentage
+              
+              // Scale differences using the customizable scale factor
+              const normalizedValue = (val - min) / scaleFactor;
+              const differenceHeight = magnificationFactor * normalizedValue;
               const totalHeight = baseHeightPercent + differenceHeight;
               
-              // Cap at 95% to leave room for the label
-              const cappedHeight = Math.min(totalHeight, 95);
+              // Cap at 98% to leave room for the label but make it taller
+              const cappedHeight = Math.min(totalHeight, 98);
               
               return (
                 <div key={i} className="flex flex-col items-center">
-                  <div className="text-xs mb-1 font-bold">{val.toFixed(2)}</div>
+                  <div className="text-lg mb-2 font-bold">{val.toFixed(2)}</div>
                   <motion.div
                     initial={{ height: 0 }}
                     animate={{ height: `${cappedHeight}%` }}
                     transition={{ duration: 0.5 }}
                     style={{
-                      width: "40px",
+                      width: `${barWidth}px`, // Using the customizable bar width
                       position: "relative",
-                      border: "1px solid rgba(0,0,0,0.2)",
+                      border: "2px solid rgba(0,0,0,0.2)",
                       ...getBarStyle(i, val)
                     }}
-                    className="flex items-end justify-center"
+                    className="flex items-end justify-center relative"
                   >
-                    {/* Highlight current position */}
-                    <div className="absolute top-0 w-full h-1 bg-black"></div>
+                    {/* Value indicator inside the bar at the top */}
+                    <div className="absolute top-2 w-full text-center">
+                      <span className="bg-white bg-opacity-70 px-2 py-1 rounded-full text-xs font-bold">
+                        {val.toFixed(1)}
+                      </span>
+                    </div>
                     
-                    {/* Base height indicator */}
+                    {/* Highlight current position */}
+                    <div className="absolute top-0 w-full h-2 bg-black"></div>
+                    
+                    {/* Base height indicator with label */}
                     {baseHeightPercent > 0 && (
-                      <div 
-                        className="absolute w-full h-px bg-gray-400"
-                        style={{ bottom: `${baseHeightPercent}%` }}
-                        ></div>
-                      )}
-                    </motion.div>
-                    <div className="text-xs mt-1">{i + 1}</div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          {steps.length === 0 && (
-            <div className="flex items-center justify-center h-full text-gray-500">
-              <p>No data to visualize. Please fetch data first.</p>
-            </div>
-          )}
-        </div>
-        
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <p className="font-medium">Progress:</p>
-            <p className="text-sm text-gray-600">
-              Step {currentStep} of {steps.length - 1}
-            </p>
+                      <div className="absolute w-full">
+                        <div className="h-px bg-gray-600 w-full"
+                          style={{ bottom: `${baseHeightPercent}%` }}></div>
+                        <div className="absolute -left-8 text-xs"
+                          style={{ bottom: `${baseHeightPercent}%` }}>Base</div>
+                      </div>
+                    )}
+                    
+                    {/* 3D effect with gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white from-5% via-transparent via-40% to-black to-90% opacity-20"></div>
+                  </motion.div>
+                  <div className="text-base mt-2 font-medium">{i + 1}</div>
+                </div>
+              );
+            })}
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
-            <div 
-              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-              style={{ 
-                width: steps.length > 1 
-                  ? `${(currentStep / (steps.length - 1)) * 100}%` 
-                  : '0%' 
-              }}
-            ></div>
+        )}
+        {steps.length === 0 && (
+          <div className="flex items-center justify-center h-full text-gray-500 text-xl">
+            <p>No data to visualize. Please fetch data first.</p>
           </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-xl font-bold mb-4 text-blue-800">Algorithm Information</h3>
-          <div className="prose max-w-none">
-            {algo === "merge" && (
-              <>
-                <h4>Merge Sort</h4>
-                <p>Time Complexity: O(n log n)</p>
-                <p>Space Complexity: O(n)</p>
-                <p>
-                  Merge sort is a divide-and-conquer algorithm that divides the input array into two halves, 
-                  recursively sorts them, and then merges the sorted halves.
-                </p>
-              </>
-            )}
-            {algo === "quick" && (
-              <>
-                <h4>Quick Sort</h4>
-                <p>Time Complexity: O(n log n) average case, O(n²) worst case</p>
-                <p>Space Complexity: O(log n)</p>
-                <p>
-                  Quick sort is a divide-and-conquer algorithm that works by selecting a 'pivot' element and 
-                  partitioning the array around the pivot so that elements smaller than the pivot are on the 
-                  left and elements greater are on the right.
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-        
-        <footer className="mt-8 text-center text-gray-500 text-sm">
-          <p>Sorting Algorithm Visualizer © {new Date().getFullYear()}</p>
-        </footer>
+        )}
       </div>
-    );
-  };
-  
-  export default SortingVisualizer;
-                      
+      
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <div className="flex justify-between items-center mb-3">
+          <p className="font-bold text-lg">Progress:</p>
+          <p className="text-base text-gray-600">
+            Step {currentStep} of {steps.length - 1}
+          </p>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-4">
+          <div 
+            className="bg-blue-600 h-4 rounded-full transition-all duration-300"
+            style={{ 
+              width: steps.length > 1 
+                ? `${(currentStep / (steps.length - 1)) * 100}%` 
+                : '0%' 
+            }}
+          ></div>
+        </div>
+      </div>
+      
+      <div className="bg-white p-8 rounded-lg shadow-lg">
+        <h3 className="text-2xl font-bold mb-4 text-blue-800">Algorithm Information</h3>
+        <div className="prose max-w-none">
+          {algo === "merge" && (
+            <>
+              <h4 className="text-xl font-semibold text-blue-700">Merge Sort</h4>
+              <p className="text-lg"><strong>Time Complexity:</strong> O(n log n)</p>
+              <p className="text-lg"><strong>Space Complexity:</strong> O(n)</p>
+              <p className="text-lg">
+                Merge sort is a divide-and-conquer algorithm that divides the input array into two halves, 
+                recursively sorts them, and then merges the sorted halves. It is a stable, comparison-based 
+                sorting algorithm that consistently performs at O(n log n) regardless of the input distribution.
+              </p>
+            </>
+          )}
+          {algo === "quick" && (
+            <>
+              <h4 className="text-xl font-semibold text-blue-700">Quick Sort</h4>
+              <p className="text-lg"><strong>Time Complexity:</strong> O(n log n) average case, O(n²) worst case</p>
+              <p className="text-lg"><strong>Space Complexity:</strong> O(log n)</p>
+              <p className="text-lg">
+                Quick sort is a divide-and-conquer algorithm that works by selecting a 'pivot' element and 
+                partitioning the array around the pivot so that elements smaller than the pivot are on the 
+                left and elements greater are on the right. Quick sort typically outperforms merge sort in practice 
+                due to better locality of reference and lower constant factors in its time complexity.
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Enhanced scale information section */}
+      <div className="bg-white p-8 rounded-lg shadow-lg mt-8">
+        <h3 className="text-2xl font-bold mb-4 text-blue-800">Scale Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="text-xl font-semibold text-blue-700">Current Settings</h4>
+            <ul className="list-disc pl-5 space-y-2 mt-3 text-lg">
+              <li><strong>Scale Factor:</strong> {scaleFactor}</li>
+              <li><strong>Magnification Factor:</strong> {magnificationFactor}x</li>
+              <li><strong>Bar Width:</strong> {barWidth}px</li>
+              <li><strong>Base Height:</strong> {20}% of total height</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xl font-semibold text-blue-700">Visualization Enhancement</h4>
+            <p className="mt-3 text-lg">
+              This visualization uses multiple factors to enhance the visibility of small differences:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 mt-3 text-lg">
+              <li>A smaller scale factor makes subtle differences between values more visible</li>
+              <li>Higher magnification amplifies the differences between values</li>
+              <li>Wider bars improve visibility of color patterns and differences</li>
+              <li>Base height ensures that even the smallest values are visible</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <footer className="mt-8 text-center text-gray-600 text-base">
+        <p>Sorting Algorithm Visualizer © {new Date().getFullYear()}</p>
+      </footer>
+    </div>
+  );
+};
+
+export default SortingVisualizer;

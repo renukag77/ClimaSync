@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import DataTable from './components/DataTable';
-import TrendAnalysis from './components/TrendAnalysis';
-import SortingVisualizer from './components/SortingVisualizer';
-import Navigation from './components/Navigation';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import DataTable from "./components/DataTable";
+import Visualizer from "./components/SortingVisualizer";
+import TrendAnalysis from "./components/TrendAnalysis";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="min-h-screen bg-gray-50">
         <Navigation />
-        <div className="container">
+        <div className="container mx-auto px-4 py-6">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={
+              <div>
+                <Dashboard />
+              </div>
+            } />
             <Route path="/data" element={<DataTable />} />
             <Route path="/trends" element={<TrendAnalysis />} />
-            <Route path="/sorting" element={<SortingVisualizer />} />
+            <Route path="/sorting" element={<Visualizer />} />
           </Routes>
         </div>
       </div>

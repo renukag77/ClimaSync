@@ -1,24 +1,27 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from './components/Dashboard';
+import DataTable from './components/DataTable';
+import TrendAnalysis from './components/TrendAnalysis';
+import SortingVisualizer from './components/SortingVisualizer';
+import Navigation from './components/Navigation';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Navigation />
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/data" element={<DataTable />} />
+            <Route path="/trends" element={<TrendAnalysis />} />
+            <Route path="/sorting" element={<SortingVisualizer />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 

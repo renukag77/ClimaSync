@@ -37,6 +37,13 @@ This project combines **Python (FastAPI)** for the backend, **React** for the fr
 
 ---
 
+![Screenshot 2025-03-19 232104](https://github.com/user-attachments/assets/6eb685b6-73cb-4866-99f2-fd3312353285)
+![Screenshot 2025-03-19 232113](https://github.com/user-attachments/assets/dfaab3e4-cc64-492e-8106-8a5bdf67ab44)
+![Screenshot 2025-03-19 232120](https://github.com/user-attachments/assets/ddcbbb91-485f-4376-b5d3-869ddea2e622)
+![Screenshot 2025-03-19 232032](https://github.com/user-attachments/assets/3cccefcc-fdaf-4a45-b148-c30474e3ac5c)
+![Screenshot 2025-03-19 232044](https://github.com/user-attachments/assets/62ef5479-3f0f-4ec8-bd64-060612c948b8)
+
+
 ## Installation 🛠️
 
 ### Clone the repository:

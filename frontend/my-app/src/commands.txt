@@ -1,5 +1,7 @@
- D:\Bunny\Climate\ClimaSync\Backend> pip install -r requirements.txt
+PS D:\Bunny\Climate\Climasync\backend> pip install -r requirements.txt
+cd Climasync\backend>
 >> uvicorn main:app --reload
 
 PS D:\Bunny\Climate\ClimaSync\frontend\my-app>npm install
+cd ClimaSync\frontend\my-app>
 npm start

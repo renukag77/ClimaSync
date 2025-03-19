@@ -1,59 +1,45 @@
-# 🛍️ E-Commerce App
+# ClimaSync 🌤️
 
-A modern, beautiful e-commerce web application built with **React** and **Tailwind CSS**, featuring a fully functional **shopping cart** and **payment gateway integration**. Designed for smooth UI/UX, real-time cart updates, and seamless checkout.
+ClimaSync is a weather forecasting and analysis web application that provides real-time and future weather predictions based on historical data. It leverages machine learning models to predict weather parameters such as temperature, humidity, wind speed, rainfall, and pressure for the next 5 days. Additionally, the app allows users to sort and filter weather data using different algorithms like Merge Sort and Quick Sort.
 
----
-
-## 🚀 Features
-
-- 🖼️ Stunning UI/UX with Tailwind CSS
-- Login And Regsiter Page
-- 🛒 Add to Cart, Remove, Quantity Update
-- 📦 Product Listing with filters
-- 🔍 Product Search Functionality
-- 🧾 Order Summary and Checkout Page
-- 🔄 Responsive Design (Mobile-first)
-- 🌐 React Router for smooth navigation
-- 💥 Toast notifications for feedback
-- 🔧 Modular and Clean Codebase
+This project combines **Python (FastAPI)** for the backend, **React** for the frontend, and **Machine Learning** techniques to predict future weather patterns, making it a comprehensive solution for analyzing and visualizing weather data.
 
 ---
 
-## 🖥️ Tech Stack
+## Features 🎯
 
-- **Frontend:** React, Tailwind CSS
-- **Routing:** React Router DOM
+- **Weather Forecasting**: Predicts weather parameters (Temperature, Humidity, Wind Speed, etc.) for the next 5 days.
+- **Data Sorting**: Use algorithms (Merge Sort, Quick Sort) to sort weather data for better insights.
+- **Weather Trend Analysis**: Visualizes weather trends over time with interactive charts.
+- **City-based Data**: Supports weather data for multiple cities (e.g., Mumbai, Delhi, Bangalore).
+- **Interactive Dashboard**: Provides a user-friendly interface to interact with data, view trends, and check forecasts.
+- **Data Filtering**: Filter weather data for specific cities and parameters.
 
 ---
 
-## 🛠️ Installation & Setup
+## Tech Stack 🚀
 
-# 1. Clone the repository
-git clone https://github.com/ybunnySunny24/QuickCart.git
+- **Backend**:
+  - Python
+  - FastAPI
+  - Scikit-Learn (Random Forest Regressor for prediction)
+  - Pandas
+  - Matplotlib (for visualizations)
 
-# 2. Install dependencies
-npm install
+- **Frontend**:
+  - React.js
+  - Tailwind CSS
+  - React Router
+  - Axios (for API calls)
 
-# 4. Start the development server
-npm start
+- **Machine Learning**:
+  - RandomForestRegressor (for weather prediction)
 
+---
 
+## Installation 🛠️
 
+### Clone the repository:
 
-![Screenshot 2025-03-19 222547](https://github.com/user-attachments/assets/3e34b284-fbcf-4925-a020-c2523be63db0)
-![Screenshot 2025-03-19 222606](https://github.com/user-attachments/assets/b949267d-6627-400f-9041-42dc46d8320b)
-![cart1](https://github.com/user-attachments/assets/a99da7f8-eaca-4f43-9dc6-08339d78103e)
-![cart2](https://github.com/user-attachments/assets/b7b79acf-bcc0-4773-8baf-06abda8acdfd)
-![cart3](https://github.com/user-attachments/assets/2525eb0f-9fac-47d2-b312-5bc5bb155317)
-![cart4](https://github.com/user-attachments/assets/32a2f35d-07e8-49f7-8219-f1f4aa8655ba)
-![cart5](https://github.com/user-attachments/assets/26fcabbe-1151-4aba-962f-f9ac203db2fb)
-![cart6](https://github.com/user-attachments/assets/dccadce5-bc24-434d-9e2a-b80010401ee7)
-![cart7](https://github.com/user-attachments/assets/64dfd418-7fda-4e46-bb17-644d3815b6cd)
-![cart8](https://github.com/user-attachments/assets/8b710046-fc48-4eea-bff2-5801a4d6c2b0)
-![cart9](https://github.com/user-attachments/assets/b8d371e3-2f47-442a-aff7-5733b357960c)
-![cart10](https://github.com/user-attachments/assets/278191dd-659a-4cdf-a140-33b56139523e)
-![cart11](https://github.com/user-attachments/assets/ad488665-2924-4fd2-9033-f74d4eb6166b)
-![cart12](https://github.com/user-attachments/assets/dbf176e3-49c0-4798-987a-2d05c583a9eb)
-![cart13](https://github.com/user-attachments/assets/84c48be9-256b-41f0-bf16-ef04e06c66bf)
-![cart14](https://github.com/user-attachments/assets/bbe49624-d6b7-4ea5-95aa-38b1f3595572)
-![Screenshot 2025-03-19 222547](https://github.com/user-attachments/assets/8898cfb9-7e7d-4fe2-bae5-874dcdda3ef3)
+```bash
+git clone https://github.com/Renukag77/ClimaSync.git
